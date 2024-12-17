@@ -1,0 +1,107 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Погода</title>
+                <link rel="stylesheet" href="main.css">
+        </head>
+        <body>
+        <div id="dateTime" style="color: #fff;font-size: 20px;"></div>
+        <h1>Погода в вашем городе</h1>
+
+        <label for="cityInput">Введите название города: </label>
+        <input type="text" id="cityInput" style="text-align: center;">
+        <button onclick="getWeather()">Получить погоду</button>
+<!--        <img id="myImage" src="1667278532_3-56.jpg" alt="Initial Image">-->
+        <div id="weatherInfo" style="border-radius: 20px 40px;"></div>
+        <script>
+                // Функция для отображения текущей даты и времени
+                function displayDateTime() {
+                        const dateTimeElement = document.getElementById('dateTime');
+                        const currentDate = new Date();
+
+                        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
+                        const formattedDateTime = currentDate.toLocaleDateString('en-US', options);
+
+                        dateTimeElement.textContent = `${formattedDateTime}`;
+                }
+
+                // Вызываем функцию при загрузке страницы
+                displayDateTime();
+                // Обновляем дату и время каждую минуту
+                setInterval(displayDateTime, 1000); // 1000 миллисекунд = 1 секунда // 60000 миллисекунд = 1 минута
+                function getWeather() {
+                        const apiKey = '738b4968f119ed7820a98d375307db75'; // Замените YOUR_API_KEY своим API-ключом OpenWeatherMap
+                        const city = document.getElementById('cityInput').value;
+
+                        if (city === '') {
+                                alert('Пожалуйста, введите название города.');
+                                return;
+                        }
+
+                        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+                        fetch(apiUrl)
+                                .then(response => response.json())
+                                .then(data => {
+                                        const weatherInfo = document.getElementById('weatherInfo');
+                                        const temperature = data.main.temp;
+                                        const weatherDescription = data.weather[0].description;
+
+                                        let recommendation = '';
+                                        if (temperature > 20) {
+                                                recommendation = '🌞Сегодня погода солнечная. Можно выйти в футболке!\n probejka🌞 = super';
+                                        }
+                                        else if(temperature<0) {
+                                                recommendation = '🥶🥶🥶сегодня холодно одевайся потеплее'
+                                        }
+                                        else {
+                                                recommendation = 'Сегодня лучше надеть что-то теплое.';
+                                        }
+
+                                        weatherInfo.innerHTML = `<h2>Погода в ${data.name}, ${data.sys.country}</h2>
+                                            <p>Температура: ${temperature}°C</p><br>
+                                            <p>${weatherDescription}</p><br>
+                                            <p>${recommendation}</p>`;
+                                })
+                                .catch(error => {
+                                        console.error('Ошибка при получении данных о погоде:', error);
+                                        alert('Ошибка при получении данных о погоде.');
+                                });
+                }
+        </script>
+
+
+        </body>
+        </html>
+
+        <!--        <script>-->
+        <!--                function getWeather() {-->
+        <!--                        const apiKey = '738b4968f119ed7820a98d375307db75'; // Замените YOUR_API_KEY своим API-ключом OpenWeatherMap-->
+        <!--                        const city = document.getElementById('cityInput').value;-->
+
+        <!--                        if (city === '') {-->
+        <!--                                alert('Пожалуйста, введите название города.');-->
+        <!--                                return;-->
+        <!--                        }-->
+
+        <!--                        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;-->
+
+        <!--                        fetch(apiUrl)-->
+        <!--                                .then(response => response.json())-->
+        <!--                                .then(data => {-->
+        <!--                                        const weatherInfo = document.getElementById('weatherInfo');-->
+        <!--                                        weatherInfo.innerHTML = `<h2>Погода в ${data.name}, ${data.sys.country}</h2>-->
+        <!--                                            <p>Температура: ${data.main.temp}°C</p>-->
+        <!--                                            <p>${data.weather[0].description}</p>`;-->
+
+        <!--                                })-->
+        <!--                                .catch(error => {-->
+        <!--                                        console.error('Ошибка при получении данных о погоде:', error);-->
+        <!--                                        alert('Ошибка при получении данных о погоде.');-->
+        <!--                                });-->
+        <!--                }-->
+        <!--        </script>-->
+
